@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sound+ for Spotify - Equalizer, DSP FX & Audio Controls</title>
+  <meta name="description" content="Ecualizador profesional de 10 bandas, potenciador de bajos DSP, crossfade y herramientas de control de audio para Spotify Web.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --card-bg: #131317;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #1DB954;
+      --accent-hover: #1ed760;
+      --text-main: #ffffff;
+      --text-muted: #a1a1aa;
+      --glass: rgba(19, 19, 23, 0.7);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+    body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
+    /* Sticky Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(9, 9, 11, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+    }
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 800; font-size: 22px; }
+    .logo-link span { color: var(--accent); }
+    
+    nav { display: flex; align-items: center; gap: 24px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    nav a:hover { color: #fff; }
+
+    .btn-install {
+      background: var(--accent);
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .btn-install:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(29, 185, 84, 0.4); }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1000px;
+      margin: 90px auto 60px;
+      text-align: center;
+      padding: 0 24px;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(29, 185, 84, 0.12);
+      border: 1px solid rgba(29, 185, 84, 0.3);
+      color: var(--accent);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 19px;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 36px;
+    }
+
+    .hero-cta { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .btn-large { padding: 16px 36px; font-size: 16px; border-radius: 40px; }
+
+    /* Features Grid */
+    .features-section { max-width: 1200px; margin: 100px auto; padding: 0 24px; }
+    .section-title { text-align: center; margin-bottom: 50px; }
+    .section-title h2 { font-size: 36px; font-weight: 800; letter-spacing: -1px; }
+    .section-title p { color: var(--text-muted); font-size: 16px; margin-top: 8px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 32px;
+      transition: all 0.3s ease;
+    }
+    .feature-card:hover {
+      border-color: rgba(29, 185, 84, 0.4);
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+    .icon-box {
+      width: 52px;
+      height: 52px;
+      background: rgba(29, 185, 84, 0.1);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 20px;
+      color: var(--accent);
+    }
+    .feature-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+    .feature-card p { font-size: 14px; color: var(--text-muted); }
+
+    /* Policy & Legal Section */
+    .policy-container {
+      max-width: 900px;
+      margin: 120px auto 60px;
+      padding: 50px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+    }
+    .policy-container h2 { font-size: 32px; font-weight: 800; color: var(--accent); margin-bottom: 12px; }
+    .policy-container h3 { font-size: 20px; font-weight: 700; margin: 28px 0 12px; color: #fff; }
+    .policy-container p, .policy-container li { font-size: 15px; color: var(--text-muted); margin-bottom: 12px; }
+    .policy-container ul { padding-left: 24px; }
+
+    /* Footer */
+    footer {
+      max-width: 1200px;
+      margin: 80px auto 0;
+      padding: 30px 24px;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .disclaimer-box {
+      max-width: 1200px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 36px; }
+      .header-container { flex-direction: column; gap: 16px; }
+      .policy-container { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <a href="#" class="logo-link">
+        <svg viewBox="0 0 24 24" width="28" height="28">
+          <circle cx="12" cy="12" r="10" fill="#1DB954"/>
+          <path d="M7 9c3-1 7-1 10 0M8 12c2.5-.7 5.5-.7 8 0M9 15c2-.5 4-.5 6 0" stroke="#000" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+        Sound<span>+</span>
+      </a>
+      <nav>
+        <a href="#features">Características</a>
+        <a href="#privacy">Política de Privacidad</a>
+        <a href="#terms">Términos Legales</a>
+        <a href="https://microsoftedge.microsoft.com/addons" class="btn-install" target="_blank">Instalar en Edge</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="badge-pill">✨ Sound+ for Spotify v3.0 Release</div>
+    <h1>Experiencia de audio profesional para <span>Spotify Web</span></h1>
+    <p>Ecualizador gráfico de 10 bandas, procesador DSP con potenciador de graves, transiciones Crossfade, espectrómetro en tiempo real y perfiles de sonido personalizados.</p>
+    <div class="hero-cta">
+      <a href="https://microsoftedge.microsoft.com/addons" class="btn-install btn-large" target="_blank">Añadir a Microsoft Edge (Gratis)</a>
+      <a href="#privacy" class="btn-install btn-large" style="background: var(--card-bg); color: #fff; border: 1px solid var(--card-border);">Ver Privacidad</a>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="features-section" id="features">
+    <div class="section-title">
+      <h2>Todo lo que necesitas para tu sonido</h2>
+      <p>Diseñado con tecnología Web Audio API pura para un rendimiento ultrarrápido sin latencia.</p>
+    </div>
+
+    <div class="grid">
+      <div class="feature-card">
+        <div class="icon-box">🎛️</div>
+        <h3>Ecualizador de 10 Bandas Pro</h3>
+        <p>Ajuste milimétrico de frecuencias desde 31Hz hasta 16kHz con curva de respuesta en tiempo real y soporte para rueda del mouse.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon-box">🎧</div>
+        <h3>Motor DSP & FxSound</h3>
+        <p>Potenciador de Sub-Graves, Claridad Vocal Crystal, Expansor de Audio 3D Surround y Limitador dinámico anti-clipping.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon-box">🎼</div>
+        <h3>Crossfade Configurable</h3>
+        <p>Mezcla suave entre pistas con duración de 1 a 5 segundos. Transición profesional sin cortes abruptos.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon-box">📊</div>
+        <h3>Espectrómetro en Tiempo Real</h3>
+        <p>Visualizador gráfico de frecuencias de 30 bandas integrado tanto en la ventana desplegable como en el panel flotante.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon-box">☁️</div>
+        <h3>Sincronización en la Nube</h3>
+        <p>Tus presets e historial se sincronizan automáticamente a través de tu cuenta entre todos tus navegadores.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon-box">🛡️</div>
+        <h3>Privacidad 100% Local</h3>
+        <p>Operación completamente aislada. Ningún dato se envía a servidores externos ni se recopila información personal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Privacy Policy Section -->
+  <section class="policy-container" id="privacy">
+    <h2>Política de Privacidad (Privacy Policy)</h2>
+    <p><strong>Última actualización:</strong> Julio de 2026 — Versión 3.0</p>
+    <p>En Sound+, nos tomamos tu privacidad con absoluta seriedad. Esta Política de Privacidad describe cómo se gestiona la información al utilizar la extensión <strong>Sound+ for Spotify</strong>.</p>
+
+    <h3>1. Principio de Procesamiento 100% Local</h3>
+    <p>Sound+ funciona totalmente en el lado del cliente (client-side) en tu navegador web. Todo el procesamiento de señales de audio, ecualización, cálculo de respuesta en frecuencia e historial de uso se ejecuta de manera aislada en tu dispositivo local mediante la API nativa `Web Audio API` de tu navegador.</p>
+
+    <h3>2. Cero Recopilación de Datos</h3>
+    <p>Sound+ <strong>NO recopila, rastrea, almacena ni transmite</strong> ningún tipo de datos personales, identificadores de usuario, dirección IP, credenciales de cuenta, historial de reproducción o información analítica hacia servidores externos. No poseemos servidores propios de telemetría.</p>
+
+    <h3>3. Uso del Almacenamiento del Navegador (`chrome.storage`)</h3>
+    <p>La extensión utiliza las APIs oficiales del navegador únicamente para las siguientes funciones:</p>
+    <ul>
+      <li><code>chrome.storage.local</code>: Para almacenar de forma local los valores de las bandas del ecualizador, el preset seleccionado y tus preferencias de UI.</li>
+      <li><code>chrome.storage.sync</code>: Para sincronizar tus presets personalizados entre tus propios dispositivos si has iniciado sesión en tu navegador.</li>
+    </ul>
+
+    <h3>4. Permisos Requeridos y Justificación</h3>
+    <p>Cumpliendo con la Política de Propósito Único (Single Purpose Policy):</p>
+    <ul>
+      <li><code>storage</code>: Requerido únicamente para guardar la configuración del usuario.</li>
+      <li><code>https://open.spotify.com/*</code>: Requerido de forma exclusiva para conectar el nodo de audio de Spotify Web Player e inyectar el panel de control.</li>
+    </ul>
+
+    <h3>5. Contacto</h3>
+    <p>Si tienes preguntas o sugerencias sobre esta política, puedes abrir una consulta en nuestro repositorio de soporte o canal de desarrollador en Microsoft Partner Center.</p>
+  </section>
+
+  <!-- Terms Section -->
+  <section class="policy-container" id="terms" style="margin-top: 40px;">
+    <h2>Términos de Servicio y Aviso Legal</h2>
+    <p>Al instalar y utilizar Sound+, aceptas utilizar la extensión conforme a las leyes aplicables y las condiciones del navegador.</p>
+    
+    <h3>Aviso de Marcas Registradas y Desvinculación</h3>
+    <p><strong>Sound+ for Spotify</strong> es un software independiente desarrollado para mejorar la experiencia de audio en navegadores web. No está afiliado, respaldado, asociado ni patrocinado oficialmente por Spotify AB ni por ninguna de sus filiales.</p>
+    <p>Spotify es una marca comercial registrada de Spotify AB en los Estados Unidos y otros países.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div>© 2026 Sound+ Audio Labs. Todos los derechos reservados.</div>
+    <div>
+      <a href="#privacy" style="color: var(--text-muted); text-decoration: underline; margin-right: 12px;">Privacidad</a>
+      <a href="#terms" style="color: var(--text-muted); text-decoration: underline;">Términos Legales</a>
+    </div>
+  </footer>
+
+  <div class="disclaimer-box">
+    Sound+ is an independent software extension and is not affiliated with or endorsed by Spotify AB.
+  </div>
+
+</body>
+</html>
